@@ -1,0 +1,39 @@
+# ڕێگری لە بینینی لیستی فایلەکانی ناو فۆڵدەرەکان (Directory Listing)
+Options -Indexes
+
+# شاردنەوەی زانیارییەکانی وەشانی سێرڤەر
+ServerSignature Off
+
+<IfModule mod_headers.c>
+    # پاراستن لە دزینی کلیک و کردنەوەی ماڵپەڕ لەناو iframe (Clickjacking)
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # ڕێگری لە گۆڕینی جۆری فایلەکان لەلایەن براوسەرەوە (MIME-Sniffing)
+    Header always set X-Content-Type-Options "nosniff"
+    # پاراستنی زانیاریی لینکەکان لە کاتی چوونە دەرەوە
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # لابردنی نیشانەی وەشانی PHP لە هێدەرەکاندا
+    Header unset X-Powered-By
+</IfModule>
+
+# قەدەغەکردنی دەستگەیشتنی ڕاستەوخۆ بە فایلە هەستیارەکانی داتابەیس و لۆگ و ڕێکخستن
+<FilesMatch "\.(sql|log|ini|env|sh|bak|swp|dist|md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# قەدەغەکردنی دەستگەیشتن بە هەر فایلێک کە بە خاڵ دەست پێبکات (وەک .htaccess و .git)
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
